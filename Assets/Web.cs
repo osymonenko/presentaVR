@@ -14,8 +14,16 @@ public class Web : MonoBehaviour
 
     IEnumerator GetDate()
     {
-        using (UnityWebRequest www = UnityWebRequest.Post("http://localhost:52052/api/AppConnect/GetTestJson/TESTData", string.Empty))
+        TestObjForJson to = new TestObjForJson(1, "First", 5);
+        var toj = JsonUtility.ToJson(to);
+        Debug.Log("sending string is: " + "TRATATA");
+        string url = "http://localhost:52052/api/AppConnect/GetTestJson/";
+
+
+        using (UnityWebRequest www = UnityWebRequest.Post(url + "Tratata", string.Empty))
         {
+
+
             yield return www.SendWebRequest();
 
             if (www.isNetworkError || www.isHttpError)
@@ -34,11 +42,14 @@ public class Web : MonoBehaviour
         }
     }
 
-    IEnumerator GetUsers()
+    IEnumerator Login(string username, string password)
     {
-        using (UnityWebRequest www = UnityWebRequest.Get("http://localhost:52052/api/AppConnect/GetTestJson/TESTUsers"))
+        WWWForm form = new WWWForm();
+        form.AddField("myField", "myData");
+
+        using (UnityWebRequest www = UnityWebRequest.Post("http://localhost:52052/Account/Login", form))
         {
-            yield return www.Send();
+            yield return www.SendWebRequest();
 
             if (www.isNetworkError || www.isHttpError)
             {
@@ -46,12 +57,22 @@ public class Web : MonoBehaviour
             }
             else
             {
-                //Show results as text
-                Debug.Log(www.downloadHandler.text);
-
-                //Or retrieve results as binary data
-                byte[] results = www.downloadHandler.data;
+                Debug.Log("Form upload complete!");
             }
         }
+    }
+}
+
+public class TestObjForJson
+{
+    public int id;
+    public string name;
+    public int vpNum;
+
+    public TestObjForJson(int id1, string name1, int vpNum1)
+    {
+        id = id1;
+        name = name1;
+        vpNum = vpNum1;
     }
 }
