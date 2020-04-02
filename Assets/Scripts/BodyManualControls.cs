@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class idle : MonoBehaviour
+public class BodyManualControls : MonoBehaviour
 {
     public float turnSpeed = 50f;
 

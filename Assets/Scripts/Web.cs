@@ -2,9 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
+using Newtonsoft.Json;
 
 public class Web : MonoBehaviour
 {
+    public string name;
+    public int id;
     // Start is called before the first frame update
     void Start()
     {
@@ -14,27 +17,27 @@ public class Web : MonoBehaviour
 
     IEnumerator GetDate()
     {
-        TestObjForJson to = new TestObjForJson(1, "First", 5);
+        RequestTestJsonObj to = new RequestTestJsonObj(1, "First", 5);
         var toj = JsonUtility.ToJson(to);
-        Debug.Log("sending string is: " + "TRATATA");
+        //Debug.Log("sending string Json(tostring): " + toj.ToString());
         string url = "http://localhost:52052/api/AppConnect/GetTestJson/";
 
 
-        using (UnityWebRequest www = UnityWebRequest.Post(url + "Tratata", string.Empty))
+        using (UnityWebRequest request = UnityWebRequest.Get(url + "Tratata"))
         {
+            yield return request.SendWebRequest();
 
-
-            yield return www.SendWebRequest();
-
-            if (www.isNetworkError || www.isHttpError)
+            if (request.isNetworkError || request.isHttpError)
             {
-                Debug.Log(www.error);
+                Debug.Log(request.error);
             }
             else
             {
+                var answer = JsonConvert.DeserializeObject<RequestTestJsonSimpleObj>(request.downloadHandler.text);
                 //Show results as text
-                Debug.Log(www.downloadHandler.text);
-                //Debug.Log(www.downloadHandler.ToString());
+                Debug.Log(request.downloadHandler.text);
+
+                var ro = answer;
 
                 //Or retrieve results as binary data
                 //byte[] results = www.downloadHandler.data;
@@ -63,16 +66,22 @@ public class Web : MonoBehaviour
     }
 }
 
-public class TestObjForJson
+public class RequestTestJsonObj
 {
-    public int id;
-    public string name;
-    public int vpNum;
+    public int id { get; set; }
+    public string name { get; set; }
+    public int vpNum { get; set; }
 
-    public TestObjForJson(int id1, string name1, int vpNum1)
+    public RequestTestJsonObj(int id1, string name1, int vpNum1)
     {
         id = id1;
         name = name1;
         vpNum = vpNum1;
     }
+}
+
+public class RequestTestJsonSimpleObj
+{
+    public string id { get; set; }
+
 }
