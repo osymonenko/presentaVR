@@ -5,10 +5,12 @@ using System;
 using System.Text.RegularExpressions;
 using UnityEngine.UI;
 
-public class Login : MonoBehaviour
+public class LoginRegister : MonoBehaviour
 {
     public GameObject email;
     public GameObject password;
+    public GameObject LoginButtonObj;
+    public GameObject RegisterButtonObj;
     private string Email;
     private string Password;
 
@@ -18,12 +20,17 @@ public class Login : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+
     }
 
-    public void SendLogin()
+    public void LoginButton()
     {
-        print ("Login info sended.");
+        print("Login info sended.");
+    }
+
+    public void RegisterButton()
+    {
+        print("Register info sended.");
     }
 
     // Update is called once per frame
@@ -40,10 +47,16 @@ public class Login : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Return))
         {
             if (Password != "" && Email != "")
-                SendLogin();
+                LoginButton();
         }
 
         Email = email.GetComponent<InputField>().text;
         Password = password.GetComponent<InputField>().text;
     }
+
+
+
+    //if all is OK...
+    //Application.LoadLevel("Start level");
+
 }
